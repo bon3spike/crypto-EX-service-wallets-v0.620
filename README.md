@@ -1,3 +1,5 @@
-Создал Application, в котором находятся интерфейсы Query и Command , CommandBusInterface, CommandHandlerInterface и CommandInterface и аналогично Query интерфейсы
-В Infrastructure/Bus/ находятся сами автобусы QueryBus и CommandBus
-Реализация команды, запроса, Dto, Expander находятся в src/Notification/Application/
+src/Application/, в нем находятся интерфейсы Query и Command , CommandBusInterface, CommandHandlerInterface и CommandInterface и аналогично Query интерфейсы
+
+src/Infrastructure/Bus/ - автобусы QueryBus и CommandBus
+
+src/Notification/Application/ - реализация команды, запроса, Dto, Expander
