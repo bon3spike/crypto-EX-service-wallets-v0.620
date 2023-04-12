@@ -11,7 +11,7 @@ use App\Entity\Notification;
 use App\Notification\Application\Dto\NotificationDto;
 use App\Notification\Application\Expander\NotificationDtoExpanderInterface;
 
-final readonly class CreateNotificationCommandHandler implements CommandHandlerInterface {
+final readonly class ChangeNotificationCommandHandler implements CommandHandlerInterface {
 
     public function __construct(
         private NotificationDtoExpanderInterface $expander
@@ -20,10 +20,10 @@ final readonly class CreateNotificationCommandHandler implements CommandHandlerI
 
     public function supports(CommandInterface $command): bool
     {
-        return $command instanceof CreateNotificationCommand;
+        return $command instanceof ChangeNotificationCommand;
     }
     /**
-     * @param CreateNotificationCommand $command
+     * @param ChangeNotificationCommand $command
      *
      * @return void
      */
@@ -37,7 +37,7 @@ final readonly class CreateNotificationCommandHandler implements CommandHandlerI
         print_r($n);
     }
 
-    public function __invoke(CreateNotificationCommand $createNotificationCommand): void
+    public function __invoke(ChangeNotificationCommand $createNotificationCommand): void
     {
         #создание сущности и запись в бд
     }
