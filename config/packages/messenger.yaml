@@ -1,0 +1,33 @@
+framework:
+    messenger:
+        default: command.bus
+        buses:
+            command.bus:
+                middleware:
+                    - doctrine_transaction
+            query.bus:
+
+        transports:
+
+        routing:
+
+        _instanceof:
+            # all services implementing the CommandHandlerInterface
+            # will be registered on the command.bus bus
+            App\Application\Command\CommandHandlerInterface:
+                tags:
+                    - { name: messenger.message_handler, bus: command.bus }
+
+            # while those implementing QueryHandlerInterface will be
+            # registered on the query.bus bus
+            App\Application\Query\QueryHandlerInterface:
+                tags:
+                    - { name: messenger.message_handler, bus: query.bus }
+
+# when@test:
+#    framework:
+#        messenger:
+#            transports:
+#                # replace with your transport name here (e.g., my_transport: 'in-memory://')
+#                # For more Messenger testing tools, see https://github.com/zenstruck/messenger-test
+#                async: 'in-memory://'

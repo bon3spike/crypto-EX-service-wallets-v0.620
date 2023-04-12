@@ -1,0 +1,3 @@
+<?php //App%255CController%255CWalletsController%2523getAllWallets
+
+return [PHP_INT_MAX, []];

@@ -1,0 +1,48 @@
+security:
+    enable_authenticator_manager: true
+    password_hashers:
+        App\Entity\Admin: 'auto'
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+            algorithm: 'auto'
+            cost:      15
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\Admin
+                property: login
+    firewalls:
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+  
+        api:
+            pattern:   ^/api
+            stateless: true
+            jwt: ~
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+  
+    access_control:
+        - { path: ^/api/testing,       roles: PUBLIC_ACCESS }
+        - { path: ^/api/message_login,       roles: PUBLIC_ACCESS }
+        - { path: ^/api/notification,       roles: PUBLIC_ACCESS}
+        - { path: ^/api/publications,       roles:  PUBLIC_ACCESS }
+        - { path: ^/api/certificate/,       roles:  PUBLIC_ACCESS }
+        - { path: ^/api/wallets/wallet_card/,       roles:  PUBLIC_ACCESS }
+        - { path: ^/api/register, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/wallet/statistic, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/statistics, roles: PUBLIC_ACCESS }
+        - { path: ^/api,       roles: PUBLIC_ACCESS }
+
+        
+        
+        
