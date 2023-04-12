@@ -1,4 +1,4 @@
-src/Application/, в нем находятся интерфейсы Query и Command , CommandBusInterface, CommandHandlerInterface и CommandInterface и аналогично Query интерфейсы
+src/Application/, в нем находятся интерфейсы Query и Command , CommandBusInterface, CommandHandlerInterface и CommandInterface, аналогично Query интерфейсы
 
 src/Infrastructure/Bus/ - автобусы QueryBus и CommandBus
 
