@@ -12,7 +12,7 @@ final readonly class NotificationDtoExpander implements NotificationDtoExpanderI
      * @param iterable<NotificationDtoExpanderInterface> $expanderCall
      */
     public function __construct(
-        private iterable $expanderCall
+        private iterable $expanderCall = []
     )
     {
     }
