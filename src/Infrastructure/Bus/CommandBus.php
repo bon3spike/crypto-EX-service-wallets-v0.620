@@ -8,7 +8,7 @@ use App\Application\Command\CommandInterface;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final readonly class CommandBus implements CommandBusInterface
+final class CommandBus implements CommandBusInterface
 {
     use HandleTrait;
 
@@ -18,7 +18,7 @@ final readonly class CommandBus implements CommandBusInterface
      *
      */
     public function __construct(
-        MessageBusInterface $commandBus, private iterable $handlers )
+        MessageBusInterface $commandBus, private readonly iterable $handlers )
 
     {
         $this->messageBus = $commandBus;

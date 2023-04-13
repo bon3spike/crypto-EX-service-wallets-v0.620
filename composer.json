@@ -24,6 +24,7 @@
         "symfony/messenger": "6.2.*",
         "symfony/runtime": "6.2.*",
         "symfony/twig-bundle": "6.2.*",
+        "symfony/validator": "6.2.*",
         "symfony/yaml": "6.2.*",
         "temporal/sdk": "^1.3",
         "twig/extra-bundle": "^3.5",
@@ -79,6 +80,10 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.48"
+        "phpunit/phpunit": "*",
+        "symfony/browser-kit": "6.2.*",
+        "symfony/css-selector": "6.2.*",
+        "symfony/maker-bundle": "^1.48",
+        "symfony/phpunit-bridge": "^6.2"
     }
 }

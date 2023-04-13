@@ -7,7 +7,7 @@ use App\Application\Query\QueryHandlerInterface;
 use App\Application\Query\QueryInterface;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
-final readonly class QueryBus implements QueryBusInterface
+final class QueryBus implements QueryBusInterface
 {
     use HandleTrait;
 
@@ -16,7 +16,7 @@ final readonly class QueryBus implements QueryBusInterface
      *
      */
     public function __construct(
-        MessageBusInterface $queryBus, private iterable $handlers )
+        MessageBusInterface $queryBus, private readonly iterable $handlers )
 
     {
         $this->messageBus = $queryBus;
