@@ -23,5 +23,12 @@ final readonly class NotificationDtoExpander implements NotificationDtoExpanderI
             $expander->expand($dto, $commandData);
         }
     }
+
+    public function expand2(NotificationDto $dto, array $commandData): void
+    {
+        foreach ($this->expanderCall as $expander) {
+            $expander->expand2($dto, $commandData);
+        }
+    }
 }
 

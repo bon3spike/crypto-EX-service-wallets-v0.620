@@ -15,5 +15,4 @@ final readonly class GetNotificationHandler
         return $this->notificationRepository->findOneBy([]);
     }
 
-
 }

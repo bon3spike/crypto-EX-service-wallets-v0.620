@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f5c8343a-042e-4600-9bfa-767d7b322271" name="Changes" comment="test">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Notification/Application/Expander/NotificationDtoExpander.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Notification/Application/Expander/NotificationDtoExpander.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Notification/Application/Query/GetNotification/GetNotificationHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Notification/Application/Query/GetNotification/GetNotificationHandler.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -231,7 +233,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682426320146</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="test">
+      <created>1682426431279</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1682426431279</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
