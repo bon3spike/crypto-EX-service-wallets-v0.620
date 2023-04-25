@@ -165,6 +165,6 @@ class __TwigTemplate_139c0dca83171e130eef14dd79486886 extends Template
         {%- endfor -%}
     </pre>
 {% endif %}
-", "@Doctrine/Collector/explain.html.twig", "/home/john/Desktop/crypto (копия)/vendor/doctrine/doctrine-bundle/Resources/views/Collector/explain.html.twig");
+", "@Doctrine/Collector/explain.html.twig", "/home/john/Desktop/testing_CQRS/vendor/doctrine/doctrine-bundle/Resources/views/Collector/explain.html.twig");
     }
 }

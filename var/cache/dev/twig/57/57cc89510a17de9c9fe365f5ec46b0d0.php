@@ -419,6 +419,6 @@ class __TwigTemplate_22d7bb470dfacf435369f3abb8755de0 extends Template
 .jms-method-trace.label {
     background: #ebebeb;
 }
-", "@JMSSerializer/Collector/style/jms.css.twig", "/home/john/Desktop/crypto (копия)/vendor/jms/serializer-bundle/Resources/views/Collector/style/jms.css.twig");
+", "@JMSSerializer/Collector/style/jms.css.twig", "/home/john/Desktop/testing_CQRS/vendor/jms/serializer-bundle/Resources/views/Collector/style/jms.css.twig");
     }
 }

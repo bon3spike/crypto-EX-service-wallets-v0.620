@@ -17,4 +17,6 @@ final readonly class ChangeNotificationCommand implements CommandInterface {
     {
         return $this->_id;
     }
+
+
 }

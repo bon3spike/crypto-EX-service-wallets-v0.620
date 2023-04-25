@@ -7,9 +7,8 @@ namespace App\Notification\Application\Command;
 
 use App\Application\Command\CommandHandlerInterface;
 use App\Application\Command\CommandInterface;
-use App\Entity\Notification;
 use App\Notification\Application\Dto\NotificationDto;
-use App\Notification\Application\Expander\NotificationDtoExpanderInterface;
+use App\Notification\Expander\NotificationDtoExpanderInterface;
 
 final readonly class ChangeNotificationCommandHandler implements CommandHandlerInterface {
 
@@ -39,6 +38,6 @@ final readonly class ChangeNotificationCommandHandler implements CommandHandlerI
 
     public function __invoke(ChangeNotificationCommand $createNotificationCommand): void
     {
-        #создание сущности и запись в бд
+        print('okey');
     }
 }

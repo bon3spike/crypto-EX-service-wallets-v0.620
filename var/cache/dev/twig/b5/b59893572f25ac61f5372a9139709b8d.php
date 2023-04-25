@@ -637,6 +637,6 @@ class __TwigTemplate_70cdae8f39a279a9da2066c78ab26653 extends Template
         </table>
     {%- endif -%}
 {%- endmacro -%}
-", "@JMSSerializer/Collector/panel.html.twig", "/home/john/Desktop/crypto (копия)/vendor/jms/serializer-bundle/Resources/views/Collector/panel.html.twig");
+", "@JMSSerializer/Collector/panel.html.twig", "/home/john/Desktop/testing_CQRS/vendor/jms/serializer-bundle/Resources/views/Collector/panel.html.twig");
     }
 }

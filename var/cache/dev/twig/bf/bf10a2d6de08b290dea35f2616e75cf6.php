@@ -121,6 +121,6 @@ class __TwigTemplate_e13c09451e38fd341dc1e3ef46440778 extends Template
     
 
 </body>
-{% endblock %}", "@Twig/Exception/error.html.twig", "/home/john/Desktop/crypto (копия)/templates/bundles/TwigBundle/Exception/error.html.twig");
+{% endblock %}", "@Twig/Exception/error.html.twig", "/home/john/Desktop/testing_CQRS/templates/bundles/TwigBundle/Exception/error.html.twig");
     }
 }

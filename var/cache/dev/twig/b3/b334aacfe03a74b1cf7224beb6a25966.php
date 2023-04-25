@@ -164,6 +164,6 @@ class __TwigTemplate_be5aa825cc77566b5c01225c2d2c8a9c extends Template
         {% block body %}{% endblock %}
     </body>
 </html>
-", "base.html.twig", "/home/john/Desktop/crypto (копия)/templates/base.html.twig");
+", "base.html.twig", "/home/john/Desktop/testing_CQRS/templates/base.html.twig");
     }
 }
