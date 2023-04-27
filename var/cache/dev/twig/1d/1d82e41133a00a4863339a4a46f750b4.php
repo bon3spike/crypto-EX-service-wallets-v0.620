@@ -136,6 +136,6 @@ class __TwigTemplate_6824cc12f1d3bc33fba271b1dae29e60 extends Template
     </ul>
 </div>
 {% endblock %}
-", "qr_code_generator/index.html.twig", "/home/john/Desktop/crypto (копия)/templates/qr_code_generator/index.html.twig");
+", "qr_code_generator/index.html.twig", "/home/john/Desktop/testing_CQRS/templates/qr_code_generator/index.html.twig");
     }
 }

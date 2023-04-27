@@ -22,6 +22,7 @@ return [
     'app_exchange_delete' => [[], ['_controller' => 'App\\Controller\\ExchangeController::cardExOrderDelete'], [], [['text', '/api/exchange/delete']], [], [], []],
     'app_exchange_input_transaction_create' => [[], ['_controller' => 'App\\Controller\\ExchangeController::exchangeInputTransactionCreate'], [], [['text', '/api/exchange/input_transaction_create']], [], [], []],
     'app_exchange_output_transaction_create' => [[], ['_controller' => 'App\\Controller\\ExchangeController::exchangeOutputTransactionCreate'], [], [['text', '/api/exchange/output_transaction_create']], [], [], []],
+    'app_get_notification' => [[], ['_controller' => 'App\\Controller\\GetNotificationController::getNotification'], [], [['text', '/api/notification/get_notification']], [], [], []],
     'app_message' => [[], ['_controller' => 'App\\Controller\\LoginController::messageLogin'], [], [['text', '/api/message_login']], [], [], []],
     'app_message_check' => [[], ['_controller' => 'App\\Controller\\LoginController::messageCheck'], [], [['text', '/api/message_check']], [], [], []],
     'app_mixing_order' => [[], ['_controller' => 'App\\Controller\\MixingOrderController::createMixingOrder'], [], [['text', '/api/mixing/order_create']], [], [], []],

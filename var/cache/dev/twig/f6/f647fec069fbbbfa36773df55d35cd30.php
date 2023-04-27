@@ -109,6 +109,6 @@ document.addEventListener(\"DOMContentLoaded\", function () {
        });
     });
 })
-", "@JMSSerializer/Collector/script/jms.js.twig", "/home/john/Desktop/crypto (копия)/vendor/jms/serializer-bundle/Resources/views/Collector/script/jms.js.twig");
+", "@JMSSerializer/Collector/script/jms.js.twig", "/home/john/Desktop/testing_CQRS/vendor/jms/serializer-bundle/Resources/views/Collector/script/jms.js.twig");
     }
 }

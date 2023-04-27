@@ -83,6 +83,6 @@ class __TwigTemplate_21acb9a0b570cb0d169a8205709d80f6 extends Template
      stroke=\"none\"
      fill=\"#aaaaaa\"/>
 </svg>
-", "@JMSSerializer/icon.svg", "/home/john/Desktop/crypto (копия)/vendor/jms/serializer-bundle/Resources/views/icon.svg");
+", "@JMSSerializer/icon.svg", "/home/john/Desktop/testing_CQRS/vendor/jms/serializer-bundle/Resources/views/icon.svg");
     }
 }
