@@ -9,19 +9,28 @@ parameters:
     sm_private_key_path: '%kernel.project_dir%/config/sm/private.pem'
     sm_public_key_path: '%kernel.project_dir%/config/sm/public.pem'
 
-services:
-    _instanceof:
-        # all services implementing the CommandHandlerInterface
-        # will be registered on the command.bus bus
-        App\Application\Command\CommandHandlerInterface:
-            tags:
-                - { name: messenger.message_handler, bus: command.bus }
 
-        # while those implementing QueryHandlerInterface will be
-        # registered on the query.bus bus
-        App\Application\Query\QueryHandlerInterface:
-            tags:
-                - { name: messenger.message_handler, bus: query.bus }
+
+services:
+    App\Notification\Expander\NotificationDtoExpanderInterface:
+        # inject all services tagged with app.handler as first argument
+        class: App\Notification\Expander\NotificationDtoExpander
+        arguments:
+            - !tagged_iterator app.notification_expander
+    App\Notification\Expander\NotificationDtoExpander:
+        class: App\Notification\Expander\NotificationDtoExpander
+        tags: ['app.notification_expander']
+    App\Notification\Expander\NotificationDtoTextExpander:
+        class: App\Notification\Expander\NotificationDtoTextExpander
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags: ['app.notification_expander']
+
+
+
+
+
+
     jwt_event_listener:
         class: App\Event\JWTCreatedListener
         arguments: [ '@request_stack' ]

@@ -258,6 +258,15 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.route_loader"/>
     </service>
+    <service id="App\Notification\Expander\NotificationDtoExpanderInterface" class="App\Notification\Expander\NotificationDtoExpander" autowire="true" autoconfigure="true">
+      <argument type="tagged_iterator" tag="app.notification_expander"/>
+    </service>
+    <service id="App\Notification\Expander\NotificationDtoExpander" class="App\Notification\Expander\NotificationDtoExpander" autowire="true" autoconfigure="true">
+      <argument type="tagged_iterator" tag="app.notification_expander"/>
+    </service>
+    <service id="App\Notification\Expander\NotificationDtoTextExpander" class="App\Notification\Expander\NotificationDtoTextExpander" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
     <service id="jwt_event_listener" class="App\Event\JWTCreatedListener" autowire="true" autoconfigure="true">
       <tag name="kernel.event_listener" event="lexik_jwt_authentication.on_jwt_authenticated" method="AuthenticationSuccess"/>
       <argument type="service" id="request_stack"/>
@@ -304,6 +313,14 @@
       <argument type="service" id="doctrine"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.CshazM0.App\Controller\ExchangeController"/>
+      </call>
+    </service>
+    <service id="App\Controller\GetNotificationController" class="App\Controller\GetNotificationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Notification\Expander\NotificationDtoExpanderInterface"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.CshazM0.App\Controller\GetNotificationController"/>
       </call>
     </service>
     <service id="App\Controller\LoginController" class="App\Controller\LoginController" public="true" autowire="true" autoconfigure="true">
@@ -398,17 +415,7 @@
     <service id="App\Infrastructure\Bus\CommandBus" class="App\Infrastructure\Bus\CommandBus" autowire="true" autoconfigure="true"/>
     <service id="App\Infrastructure\Bus\QueryBus" class="App\Infrastructure\Bus\QueryBus" autowire="true" autoconfigure="true"/>
     <service id="App\Integration\CryptoCompare" class="App\Integration\CryptoCompare" autowire="true" autoconfigure="true"/>
-    <service id="App\Notification\Application\Command\ChangeNotificationCommand" class="App\Notification\Application\Command\ChangeNotificationCommand" autowire="true" autoconfigure="true"/>
-    <service id="App\Notification\Application\Command\ChangeNotificationCommandHandler" class="App\Notification\Application\Command\ChangeNotificationCommandHandler" autowire="true" autoconfigure="true">
-      <tag name="messenger.message_handler" bus="command.bus"/>
-      <argument type="service" id="App\Notification\Application\Expander\NotificationDtoExpander"/>
-    </service>
-    <service id="App\Notification\Application\Dto\NotificationDto" class="App\Notification\Application\Dto\NotificationDto" autowire="true" autoconfigure="true"/>
-    <service id="App\Notification\Application\Expander\NotificationDtoExpander" class="App\Notification\Application\Expander\NotificationDtoExpander" autowire="true" autoconfigure="true"/>
-    <service id="App\Notification\Application\Query\GetNotification\GetNotificationHandler" class="App\Notification\Application\Query\GetNotification\GetNotificationHandler" autowire="true" autoconfigure="true">
-      <argument type="service" id="App\Repository\NotificationRepository"/>
-    </service>
-    <service id="App\Notification\Application\Query\GetNotification\GetNotificationQuery" class="App\Notification\Application\Query\GetNotification\GetNotificationQuery" autowire="true" autoconfigure="true"/>
+    <service id="App\Notification\Dto\NotificationDto" class="App\Notification\Dto\NotificationDto" autowire="true" autoconfigure="true"/>
     <service id="App\Repository\AddressMixingRepository" class="App\Repository\AddressMixingRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -473,13 +480,6 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
-    <service id="App\Service\CQRS\Command\ChangeNotificationCommand" class="App\Service\CQRS\Command\ChangeNotificationCommand" autowire="true" autoconfigure="true"/>
-    <service id="App\Service\CQRS\Command\NotificationCmdHandler" class="App\Service\CQRS\Command\NotificationCmdHandler" autowire="true" autoconfigure="true"/>
-    <service id="App\Service\CQRS\MessengerCommandBus" class="App\Service\CQRS\MessengerCommandBus" autowire="true" autoconfigure="true">
-      <argument type="service" id="command.bus"/>
-    </service>
-    <service id="App\Service\CQRS\MessengerQueryBus" class="App\Service\CQRS\MessengerQueryBus" autowire="true" autoconfigure="true"/>
-    <service id="App\Service\CQRS\Query" class="App\Service\CQRS\Query" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="response_listener" class="Symfony\Component\HttpKernel\EventListener\ResponseListener">
       <tag name="kernel.event_subscriber"/>
@@ -1001,9 +1001,7 @@
       <argument type="collection"/>
       <argument type="service" id="messenger.listener.reset_services" on-invalid="null"/>
       <argument type="collection">
-        <argument>command.bus</argument>
-        <argument>query.bus</argument>
-        <argument>event.bus</argument>
+        <argument>messenger.bus.default</argument>
       </argument>
       <argument>null</argument>
       <call method="setName">
@@ -1029,16 +1027,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="collection">
-        <argument key="command.bus" type="collection">
-          <argument key="App\Notification\Application\Command\ChangeNotificationCommand" type="collection">
-            <argument type="collection">
-              <argument>App\Notification\Application\Command\ChangeNotificationCommandHandler</argument>
-              <argument type="collection"/>
-            </argument>
-          </argument>
-        </argument>
-        <argument key="query.bus" type="collection"/>
-        <argument key="event.bus" type="collection"/>
+        <argument key="messenger.bus.default" type="collection"/>
       </argument>
       <call method="setName">
         <argument>debug:messenger</argument>
@@ -3325,47 +3314,19 @@
       <argument type="service" id="services_resetter"/>
     </service>
     <service id="messenger.routable_message_bus" class="Symfony\Component\Messenger\RoutableMessageBus">
-      <argument type="service" id=".service_locator.uPTrFRJ"/>
-      <argument type="service" id="command.bus"/>
+      <argument type="service" id=".service_locator.5cAhUFF"/>
+      <argument type="service" id="messenger.bus.default"/>
     </service>
-    <service id="command.bus" class="Symfony\Component\Messenger\MessageBus">
+    <service id="messenger.bus.default" class="Symfony\Component\Messenger\MessageBus">
       <tag name="messenger.bus"/>
       <argument type="iterator">
-        <argument type="service" id="command.bus.middleware.traceable"/>
-        <argument type="service" id="command.bus.middleware.add_bus_name_stamp_middleware"/>
+        <argument type="service" id="messenger.bus.default.middleware.traceable"/>
+        <argument type="service" id="messenger.bus.default.middleware.add_bus_name_stamp_middleware"/>
         <argument type="service" id="messenger.middleware.reject_redelivered_message_middleware"/>
         <argument type="service" id="messenger.middleware.dispatch_after_current_bus"/>
         <argument type="service" id="messenger.middleware.failed_message_processing_middleware"/>
-        <argument type="service" id="messenger.middleware.validation"/>
-        <argument type="service" id="command.bus.middleware.doctrine_transaction"/>
-        <argument type="service" id="command.bus.middleware.send_message"/>
-        <argument type="service" id="command.bus.middleware.handle_message"/>
-      </argument>
-    </service>
-    <service id="query.bus" class="Symfony\Component\Messenger\MessageBus">
-      <tag name="messenger.bus"/>
-      <argument type="iterator">
-        <argument type="service" id="query.bus.middleware.traceable"/>
-        <argument type="service" id="query.bus.middleware.add_bus_name_stamp_middleware"/>
-        <argument type="service" id="messenger.middleware.reject_redelivered_message_middleware"/>
-        <argument type="service" id="messenger.middleware.dispatch_after_current_bus"/>
-        <argument type="service" id="messenger.middleware.failed_message_processing_middleware"/>
-        <argument type="service" id="messenger.middleware.validation"/>
-        <argument type="service" id="query.bus.middleware.send_message"/>
-        <argument type="service" id="query.bus.middleware.handle_message"/>
-      </argument>
-    </service>
-    <service id="event.bus" class="Symfony\Component\Messenger\MessageBus">
-      <tag name="messenger.bus"/>
-      <argument type="iterator">
-        <argument type="service" id="event.bus.middleware.traceable"/>
-        <argument type="service" id="event.bus.middleware.add_bus_name_stamp_middleware"/>
-        <argument type="service" id="messenger.middleware.reject_redelivered_message_middleware"/>
-        <argument type="service" id="messenger.middleware.dispatch_after_current_bus"/>
-        <argument type="service" id="messenger.middleware.failed_message_processing_middleware"/>
-        <argument type="service" id="messenger.middleware.validation"/>
-        <argument type="service" id="event.bus.middleware.send_message"/>
-        <argument type="service" id="event.bus.middleware.handle_message"/>
+        <argument type="service" id="messenger.bus.default.middleware.send_message"/>
+        <argument type="service" id="messenger.bus.default.middleware.handle_message"/>
       </argument>
     </service>
     <service id="jms_serializer.event_dispatcher" class="JMS\SerializerBundle\Debug\TraceableEventDispatcher">
@@ -6824,6 +6785,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ExchangeController" class="App\Controller\ExchangeController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ExchangeController" class="App\Controller\ExchangeController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ExchangeController" class="App\Controller\ExchangeController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\GetNotificationController" class="App\Controller\GetNotificationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\GetNotificationController" class="App\Controller\GetNotificationController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\GetNotificationController" class="App\Controller\GetNotificationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\LoginController" class="App\Controller\LoginController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\LoginController" class="App\Controller\LoginController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\LoginController" class="App\Controller\LoginController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -6851,8 +6815,6 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\WalletsStatisticController" class="App\Controller\WalletsStatisticController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\WalletsStatisticController" class="App\Controller\WalletsStatisticController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\WalletsStatisticController" class="App\Controller\WalletsStatisticController" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Application\Command\CommandHandlerInterface.0.App\Notification\Application\Command\ChangeNotificationCommandHandler" class="App\Notification\Application\Command\ChangeNotificationCommandHandler" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Notification\Application\Command\ChangeNotificationCommandHandler" class="App\Notification\Application\Command\ChangeNotificationCommandHandler" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AddressMixingRepository" class="App\Repository\AddressMixingRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\AddressMixingRepository" class="App\Repository\AddressMixingRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AddressRepository" class="App\Repository\AddressRepository" autowire="true" abstract="true"/>
@@ -7373,17 +7335,14 @@
       <argument type="service" id="debug.argument_resolver.not_tagged_controller.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id="command.bus.middleware.traceable" class="Symfony\Component\Messenger\Middleware\TraceableMiddleware">
+    <service id="messenger.bus.default.middleware.traceable" class="Symfony\Component\Messenger\Middleware\TraceableMiddleware">
       <argument type="service" id="debug.stopwatch"/>
-      <argument>command.bus</argument>
+      <argument>messenger.bus.default</argument>
     </service>
-    <service id="command.bus.middleware.add_bus_name_stamp_middleware" class="Symfony\Component\Messenger\Middleware\AddBusNameStampMiddleware">
-      <argument>command.bus</argument>
+    <service id="messenger.bus.default.middleware.add_bus_name_stamp_middleware" class="Symfony\Component\Messenger\Middleware\AddBusNameStampMiddleware">
+      <argument>messenger.bus.default</argument>
     </service>
-    <service id="command.bus.middleware.doctrine_transaction" class="Symfony\Bridge\Doctrine\Messenger\DoctrineTransactionMiddleware">
-      <argument type="service" id="doctrine"/>
-    </service>
-    <service id="command.bus.middleware.send_message" class="Symfony\Component\Messenger\Middleware\SendMessageMiddleware">
+    <service id="messenger.bus.default.middleware.send_message" class="Symfony\Component\Messenger\Middleware\SendMessageMiddleware">
       <argument type="service" id="messenger.senders_locator"/>
       <argument type="service" id="debug.event_dispatcher"/>
       <argument>true</argument>
@@ -7391,80 +7350,20 @@
         <argument type="service" id="logger" on-invalid="ignore"/>
       </call>
     </service>
-    <service id="command.bus.middleware.handle_message" class="Symfony\Component\Messenger\Middleware\HandleMessageMiddleware">
-      <argument type="service" id="command.bus.messenger.handlers_locator"/>
+    <service id="messenger.bus.default.middleware.handle_message" class="Symfony\Component\Messenger\Middleware\HandleMessageMiddleware">
+      <argument type="service" id="messenger.bus.default.messenger.handlers_locator"/>
       <argument>false</argument>
       <call method="setLogger">
         <argument type="service" id="logger" on-invalid="ignore"/>
       </call>
     </service>
-    <service id="query.bus.middleware.traceable" class="Symfony\Component\Messenger\Middleware\TraceableMiddleware">
-      <argument type="service" id="debug.stopwatch"/>
-      <argument>query.bus</argument>
-    </service>
-    <service id="query.bus.middleware.add_bus_name_stamp_middleware" class="Symfony\Component\Messenger\Middleware\AddBusNameStampMiddleware">
-      <argument>query.bus</argument>
-    </service>
-    <service id="query.bus.middleware.send_message" class="Symfony\Component\Messenger\Middleware\SendMessageMiddleware">
-      <argument type="service" id="messenger.senders_locator"/>
-      <argument type="service" id="debug.event_dispatcher"/>
-      <argument>true</argument>
-      <call method="setLogger">
-        <argument type="service" id="logger" on-invalid="ignore"/>
-      </call>
-    </service>
-    <service id="query.bus.middleware.handle_message" class="Symfony\Component\Messenger\Middleware\HandleMessageMiddleware">
-      <argument type="service" id="query.bus.messenger.handlers_locator"/>
-      <argument>false</argument>
-      <call method="setLogger">
-        <argument type="service" id="logger" on-invalid="ignore"/>
-      </call>
-    </service>
-    <service id="event.bus.middleware.traceable" class="Symfony\Component\Messenger\Middleware\TraceableMiddleware">
-      <argument type="service" id="debug.stopwatch"/>
-      <argument>event.bus</argument>
-    </service>
-    <service id="event.bus.middleware.add_bus_name_stamp_middleware" class="Symfony\Component\Messenger\Middleware\AddBusNameStampMiddleware">
-      <argument>event.bus</argument>
-    </service>
-    <service id="event.bus.middleware.send_message" class="Symfony\Component\Messenger\Middleware\SendMessageMiddleware">
-      <argument type="service" id="messenger.senders_locator"/>
-      <argument type="service" id="debug.event_dispatcher"/>
-      <argument>true</argument>
-      <call method="setLogger">
-        <argument type="service" id="logger" on-invalid="ignore"/>
-      </call>
-    </service>
-    <service id="event.bus.middleware.handle_message" class="Symfony\Component\Messenger\Middleware\HandleMessageMiddleware">
-      <argument type="service" id="event.bus.messenger.handlers_locator"/>
-      <argument>false</argument>
-      <call method="setLogger">
-        <argument type="service" id="logger" on-invalid="ignore"/>
-      </call>
-    </service>
-    <service id=".service_locator.uPTrFRJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.5cAhUFF" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="command.bus" type="service_closure" id="command.bus"/>
-        <argument key="event.bus" type="service_closure" id="event.bus"/>
-        <argument key="query.bus" type="service_closure" id="query.bus"/>
+        <argument key="messenger.bus.default" type="service_closure" id="messenger.bus.default"/>
       </argument>
     </service>
-    <service id=".messenger.handler_descriptor.ggdhd79" class="Symfony\Component\Messenger\Handler\HandlerDescriptor">
-      <argument type="service" id="App\Notification\Application\Command\ChangeNotificationCommandHandler"/>
-      <argument type="collection"/>
-    </service>
-    <service id="command.bus.messenger.handlers_locator" class="Symfony\Component\Messenger\Handler\HandlersLocator">
-      <argument type="collection">
-        <argument key="App\Notification\Application\Command\ChangeNotificationCommand" type="iterator">
-          <argument type="service" id=".messenger.handler_descriptor.ggdhd79"/>
-        </argument>
-      </argument>
-    </service>
-    <service id="query.bus.messenger.handlers_locator" class="Symfony\Component\Messenger\Handler\HandlersLocator">
-      <argument type="collection"/>
-    </service>
-    <service id="event.bus.messenger.handlers_locator" class="Symfony\Component\Messenger\Handler\HandlersLocator">
+    <service id="messenger.bus.default.messenger.handlers_locator" class="Symfony\Component\Messenger\Handler\HandlersLocator">
       <argument type="collection"/>
     </service>
     <service id="fos_rest.request_matcher.2364365e6bb6bfd5cadeda231e59db9139fadac2b673beb794ba3c0068839a899dc3c386" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
@@ -7610,6 +7509,12 @@
     <service id=".service_locator.CshazM0.App\Controller\ExchangeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ExchangeController"/>
       <argument>App\Controller\ExchangeController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.CshazM0" method="withContext"/>
+    </service>
+    <service id=".service_locator.CshazM0.App\Controller\GetNotificationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\GetNotificationController"/>
+      <argument>App\Controller\GetNotificationController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.CshazM0" method="withContext"/>
     </service>
@@ -8551,11 +8456,7 @@
       </argument>
     </service>
     <service id="App\Application\Command\CommandBusInterface" alias="App\Infrastructure\Bus\CommandBus"/>
-    <service id="App\Application\Command\CommandHandlerInterface" alias="App\Notification\Application\Command\ChangeNotificationCommandHandler"/>
-    <service id="App\Application\Command\CommandInterface" alias="App\Notification\Application\Command\ChangeNotificationCommand"/>
     <service id="App\Application\Query\QueryBusInterface" alias="App\Infrastructure\Bus\QueryBus"/>
-    <service id="App\Application\Query\QueryInterface" alias="App\Notification\Application\Query\GetNotification\GetNotificationQuery"/>
-    <service id="App\Notification\Application\Expander\NotificationDtoExpanderInterface" alias="App\Notification\Application\Expander\NotificationDtoExpander"/>
     <service id="App\Kernel" alias="kernel" public="true"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface" alias="parameter_bag"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface" alias="parameter_bag"/>
@@ -8619,10 +8520,8 @@
     <service id="Symfony\Component\Security\Csrf\CsrfTokenManagerInterface" alias="security.csrf.token_manager"/>
     <service id="Symfony\Component\Validator\Validator\ValidatorInterface" alias="validator"/>
     <service id="validator.mapping.class_metadata_factory" alias="validator"/>
-    <service id="messenger.default_bus" alias="command.bus" public="true"/>
-    <service id="Symfony\Component\Messenger\MessageBusInterface" alias="command.bus"/>
-    <service id="Symfony\Component\Messenger\MessageBusInterface $queryBus" alias="query.bus"/>
-    <service id="Symfony\Component\Messenger\MessageBusInterface $eventBus" alias="event.bus"/>
+    <service id="messenger.default_bus" alias="messenger.bus.default" public="true"/>
+    <service id="Symfony\Component\Messenger\MessageBusInterface" alias="messenger.bus.default"/>
     <service id="jms_serializer.metadata.cache" alias="jms_serializer.metadata.cache.file_cache"/>
     <service id="jms_serializer.naming_strategy" alias="jms_serializer.serialized_name_annotation_strategy"/>
     <service id="jms_serializer.deserialization_context_factory" alias="jms_serializer.configured_deserialization_context_factory" public="true"/>
@@ -8768,7 +8667,6 @@
     <service id=".service_locator.MwyJ7UG" alias=".service_locator.rqj6Qk0"/>
     <service id=".service_locator.akJe7m8" alias=".service_locator.1M7EDLO"/>
     <service id=".service_locator.z7kAUPH" alias=".service_locator.vp1pfih"/>
-    <service id=".service_locator.E6gbtsP" alias=".service_locator.uPTrFRJ"/>
     <service id=".service_locator.XW18Svm" alias=".service_locator.TcKhdzh"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
     <service id=".service_locator.VZoQk0z" alias=".service_locator.CshazM0"/>

@@ -26,6 +26,7 @@ return [
         '/api/exchange/delete' => [[['_route' => 'app_exchange_delete', '_controller' => 'App\\Controller\\ExchangeController::cardExOrderDelete'], null, ['DELETE' => 0], null, false, false, null]],
         '/api/exchange/input_transaction_create' => [[['_route' => 'app_exchange_input_transaction_create', '_controller' => 'App\\Controller\\ExchangeController::exchangeInputTransactionCreate'], null, ['POST' => 0], null, false, false, null]],
         '/api/exchange/output_transaction_create' => [[['_route' => 'app_exchange_output_transaction_create', '_controller' => 'App\\Controller\\ExchangeController::exchangeOutputTransactionCreate'], null, ['POST' => 0], null, false, false, null]],
+        '/api/notification/get_notification' => [[['_route' => 'app_get_notification', '_controller' => 'App\\Controller\\GetNotificationController::getNotification'], null, ['GET' => 0], null, false, false, null]],
         '/api/message_login' => [[['_route' => 'app_message', '_controller' => 'App\\Controller\\LoginController::messageLogin'], null, ['POST' => 0], null, false, false, null]],
         '/api/message_check' => [[['_route' => 'app_message_check', '_controller' => 'App\\Controller\\LoginController::messageCheck'], null, ['POST' => 0], null, false, false, null]],
         '/api/mixing/order_create' => [[['_route' => 'app_mixing_order', '_controller' => 'App\\Controller\\MixingOrderController::createMixingOrder'], null, ['POST' => 0], null, false, false, null]],
