@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Notification\Dto\NotificationDto;
 use App\Notification\Expander\NotificationDtoExpander;
 use App\Notification\Expander\NotificationDtoExpanderInterface;
+use App\Notification\Facade\NotificationFacadeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,23 +16,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class GetNotificationController extends AbstractController
 {
 
-    private NotificationDtoExpanderInterface $expander;
+    private NotificationFacadeInterface $facade;
 
-    public function __construct(NotificationDtoExpanderInterface $expander)
+    public function __construct(NotificationFacadeInterface $facade)
     {
-        $this->expander = $expander;
-    }
-
-    public function getDto(string $id): mixed
-    {
-        $dto = new NotificationDto($id);
-        $this->expander->expand($dto);
-        return $dto;
+        $this->facade = $facade;
     }
 
     #[Route('/api/notification/get_notification', name: 'app_get_notification', methods: ["GET"])]
     public function getNotification(): JsonResponse
     {
-        return new JsonResponse($this->getDto(1));
+        return new JsonResponse($this->facade->getDto(1));
     }
 }
