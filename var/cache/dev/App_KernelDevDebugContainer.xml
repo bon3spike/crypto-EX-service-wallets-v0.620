@@ -421,6 +421,9 @@
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
     <service id="App\Notification\Facade\NotificationFacade" class="App\Notification\Facade\NotificationFacade" autowire="true" autoconfigure="true">
+      <argument type="service" id="App\Notification\NotificationReceiver"/>
+    </service>
+    <service id="App\Notification\NotificationReceiver" class="App\Notification\NotificationReceiver" autowire="true" autoconfigure="true">
       <argument type="service" id="App\Notification\Expander\NotificationDtoExpanderInterface"/>
     </service>
     <service id="App\Repository\AddressMixingRepository" class="App\Repository\AddressMixingRepository" autowire="true" autoconfigure="true">
@@ -8465,6 +8468,7 @@
     <service id="App\Application\Command\CommandBusInterface" alias="App\Infrastructure\Bus\CommandBus"/>
     <service id="App\Application\Query\QueryBusInterface" alias="App\Infrastructure\Bus\QueryBus"/>
     <service id="App\Notification\Facade\NotificationFacadeInterface" alias="App\Notification\Facade\NotificationFacade"/>
+    <service id="App\Notification\NotificationReceiverInterface" alias="App\Notification\NotificationReceiver"/>
     <service id="App\Kernel" alias="kernel" public="true"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface" alias="parameter_bag"/>
     <service id="Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface" alias="parameter_bag"/>

@@ -2,22 +2,18 @@
 
 namespace App\Notification\Facade;
 
-use App\Notification\Dto\NotificationDto;
-use App\Notification\Expander\NotificationDtoExpanderInterface;
 
-final class NotificationFacade implements NotificationFacadeInterface
+use App\Notification\NotificationReceiverInterface;
+
+final readonly class NotificationFacade implements NotificationFacadeInterface
 {
-    private NotificationDtoExpanderInterface $expander;
-
-    public function __construct(NotificationDtoExpanderInterface $expander)
+    public function __construct(
+        private NotificationReceiverInterface $notificationReceiver)
     {
-        $this->expander = $expander;
     }
 
-    public function getDto(string $id): mixed
+    public function lookupNotification(string $id): object
     {
-        $dto = new NotificationDto($id);
-        $this->expander->expand($dto);
-        return $dto;
+        return $this->notificationReceiver->getDto($id);
     }
 }
