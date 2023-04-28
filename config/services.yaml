@@ -13,20 +13,16 @@ parameters:
 
 services:
     App\Notification\Expander\NotificationDtoExpanderInterface:
-        # inject all services tagged with app.handler as first argument
+    # inject all services tagged with app.handler as first argument
         class: App\Notification\Expander\NotificationDtoExpander
         arguments:
-            - !tagged_iterator app.notification_expander
-    App\Notification\Expander\NotificationDtoExpander:
-        class: App\Notification\Expander\NotificationDtoExpander
-        tags: ['app.notification_expander']
-    App\Notification\Expander\NotificationDtoTextExpander:
+        - !tagged_iterator app.notification_expander
+
+    app.notification.expander.text:
         class: App\Notification\Expander\NotificationDtoTextExpander
         arguments:
             - "@doctrine.orm.entity_manager"
         tags: ['app.notification_expander']
-
-
 
 
 

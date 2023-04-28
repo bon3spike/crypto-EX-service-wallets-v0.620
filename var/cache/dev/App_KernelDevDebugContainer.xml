@@ -261,10 +261,8 @@
     <service id="App\Notification\Expander\NotificationDtoExpanderInterface" class="App\Notification\Expander\NotificationDtoExpander" autowire="true" autoconfigure="true">
       <argument type="tagged_iterator" tag="app.notification_expander"/>
     </service>
-    <service id="App\Notification\Expander\NotificationDtoExpander" class="App\Notification\Expander\NotificationDtoExpander" autowire="true" autoconfigure="true">
-      <argument type="tagged_iterator" tag="app.notification_expander"/>
-    </service>
-    <service id="App\Notification\Expander\NotificationDtoTextExpander" class="App\Notification\Expander\NotificationDtoTextExpander" autowire="true" autoconfigure="true">
+    <service id="app.notification.expander.text" class="App\Notification\Expander\NotificationDtoTextExpander" autowire="true" autoconfigure="true">
+      <tag name="app.notification_expander"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
     <service id="jwt_event_listener" class="App\Event\JWTCreatedListener" autowire="true" autoconfigure="true">
@@ -416,6 +414,12 @@
     <service id="App\Infrastructure\Bus\QueryBus" class="App\Infrastructure\Bus\QueryBus" autowire="true" autoconfigure="true"/>
     <service id="App\Integration\CryptoCompare" class="App\Integration\CryptoCompare" autowire="true" autoconfigure="true"/>
     <service id="App\Notification\Dto\NotificationDto" class="App\Notification\Dto\NotificationDto" autowire="true" autoconfigure="true"/>
+    <service id="App\Notification\Expander\NotificationDtoExpander" class="App\Notification\Expander\NotificationDtoExpander" autowire="true" autoconfigure="true">
+      <argument type="tagged_iterator" tag="app.notification_expander"/>
+    </service>
+    <service id="App\Notification\Expander\NotificationDtoTextExpander" class="App\Notification\Expander\NotificationDtoTextExpander" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
     <service id="App\Repository\AddressMixingRepository" class="App\Repository\AddressMixingRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>

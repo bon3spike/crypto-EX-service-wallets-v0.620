@@ -8,6 +8,7 @@ use App\Notification\Expander\NotificationDtoExpanderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -21,7 +22,7 @@ class GetNotificationController extends AbstractController
         $this->expander = $expander;
     }
 
-    public function getDto(string $id): object
+    public function getDto(string $id): mixed
     {
         $dto = new NotificationDto($id);
         $this->expander->expand($dto);
@@ -31,6 +32,6 @@ class GetNotificationController extends AbstractController
     #[Route('/api/notification/get_notification', name: 'app_get_notification', methods: ["GET"])]
     public function getNotification(): JsonResponse
     {
-        return new JsonResponse($this->getDto(2));
+        return new JsonResponse($this->getDto(1));
     }
 }
