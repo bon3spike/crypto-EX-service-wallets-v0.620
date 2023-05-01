@@ -23,11 +23,14 @@ class GetNotificationController extends AbstractController
         $this->facade = $facade;
     }
 
-
-
     #[Route('/api/notification/get_notification', name: 'app_get_notification', methods: ["GET"])]
     public function getNotification(): JsonResponse
     {
-        return new JsonResponse($this->facade->lookupNotification(1));
+        try {
+            return new JsonResponse($this->facade->lookupNotification(1));
+        } catch (\Exception $exception) {
+            return $this->json(["Error: " . $exception->getMessage()]);
+        }
+
     }
 }

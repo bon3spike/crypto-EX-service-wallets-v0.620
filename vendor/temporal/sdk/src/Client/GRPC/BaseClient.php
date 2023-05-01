@@ -19,6 +19,11 @@ use Temporal\Exception\Client\TimeoutException;
 
 abstract class BaseClient implements ServiceClientInterface
 {
+    const RETRYABLE_ERRORS = [
+        StatusCode::RESOURCE_EXHAUSTED,
+        StatusCode::UNAVAILABLE,
+        StatusCode::UNKNOWN,
+    ];
     private WorkflowServiceClient $workflowService;
 
     /**
@@ -63,27 +68,42 @@ abstract class BaseClient implements ServiceClientInterface
     /**
      * @param string $address
      * @param string $crt Certificate or cert file in x509 format.
+     * @param string|null $clientKey
+     * @param string|null $clientPem
+     * @param string|null $overrideServerName
      * @return ServiceClientInterface
      *
      * @psalm-suppress UndefinedClass
      * @psalm-suppress UnusedVariable
      */
-    public static function createSSL(string $address, string $crt): ServiceClientInterface
+    public static function createSSL(
+        string $address,
+        string $crt,
+        string $clientKey = null,
+        string $clientPem = null,
+        string $overrideServerName = null
+    ): ServiceClientInterface
     {
-        if (\is_file($crt)) {
-            $crt = \file_get_contents($crt);
+        $options = [
+            'credentials' => \Grpc\ChannelCredentials::createSsl(
+                \is_file($crt) ? \file_get_contents($crt) : null,
+                \is_file($clientKey) ? \file_get_contents($clientKey) : null,
+                \is_file($clientPem) ? \file_get_contents($clientPem) : null
+            )
+        ];
+
+        if ($overrideServerName !== null) {
+            $options['grpc.default_authority'] = $overrideServerName;
+            $options['grpc.ssl_target_name_override'] = $overrideServerName;
         }
 
-        $client = new WorkflowServiceClient(
-            $address,
-            ['credentials' => \Grpc\ChannelCredentials::createSsl($crt)]
-        );
+        $client = new WorkflowServiceClient($address, $options);
 
         return new static($client);
     }
 
     /**
-     * @param string $method
+     * @param non-empty-string $method RPC method name
      * @param object $arg
      * @param ContextInterface|null $ctx
      * @return mixed
@@ -112,7 +132,6 @@ abstract class BaseClient implements ServiceClientInterface
                 if ($ctx->getDeadline() !== null) {
                     $diff = (new \DateTime())->diff($ctx->getDeadline());
                     $options['timeout'] = CarbonInterval::instance($diff)->totalMicroseconds;
-                    ;
                 }
 
                 /** @var UnaryCall $call */
@@ -125,7 +144,7 @@ abstract class BaseClient implements ServiceClientInterface
 
                 return $result;
             } catch (ServiceClientException $e) {
-                if ($e->getCode() !== StatusCode::RESOURCE_EXHAUSTED) {
+                if (!\in_array($e->getCode(), self::RETRYABLE_ERRORS, true)) {
                     if ($e->getCode() === StatusCode::DEADLINE_EXCEEDED) {
                         throw new TimeoutException($e->getMessage(), $e->getCode(), $e);
                     }

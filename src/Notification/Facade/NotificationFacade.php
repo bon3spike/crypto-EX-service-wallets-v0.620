@@ -3,7 +3,7 @@
 namespace App\Notification\Facade;
 
 
-use App\Notification\NotificationReceiverInterface;
+use App\Shared\Notification\NotificationReceiverInterface;
 
 final readonly class NotificationFacade implements NotificationFacadeInterface
 {

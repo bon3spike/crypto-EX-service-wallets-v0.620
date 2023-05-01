@@ -27,7 +27,9 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
             'Twig\\Extra\\TwigExtraBundle\\' => 27,
             'Twig\\Extra\\String\\' => 18,
             'Twig\\' => 5,
+            'Temporal\\Testing\\' => 17,
             'Temporal\\Roadrunner\\' => 20,
+            'Temporal\\Api\\Testservice\\' => 25,
             'Temporal\\Api\\' => 13,
             'Temporal\\' => 9,
         ),
@@ -57,6 +59,7 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\PropertyInfo\\' => 31,
             'Symfony\\Component\\PropertyAccess\\' => 33,
+            'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\PasswordHasher\\' => 33,
             'Symfony\\Component\\Messenger\\' => 28,
             'Symfony\\Component\\HttpKernel\\' => 29,
@@ -82,6 +85,8 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
             'Symfony\\Bridge\\PhpUnit\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'Spiral\\Tokenizer\\' => 17,
+            'Spiral\\RoadRunner\\KeyValue\\' => 27,
+            'Spiral\\RoadRunner\\Http\\' => 23,
             'Spiral\\RoadRunner\\Console\\' => 26,
             'Spiral\\RoadRunner\\' => 18,
             'Spiral\\Logger\\' => 14,
@@ -97,6 +102,7 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
             'Psr\\EventDispatcher\\' => 20,
             'Psr\\Container\\' => 14,
             'Psr\\Clock\\' => 10,
@@ -131,6 +137,7 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
             'Grpc\\' => 5,
             'Google\\Protobuf\\' => 16,
             'Google\\' => 7,
+            'GPBMetadata\\Temporal\\Api\\Testservice\\' => 37,
             'GPBMetadata\\Google\\Protobuf\\' => 28,
             'GPBMetadata\\Google\\' => 19,
             'GPBMetadata\\' => 12,
@@ -183,9 +190,17 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
+        'Temporal\\Testing\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/temporal/sdk/testing/src',
+        ),
         'Temporal\\Roadrunner\\' => 
         array (
             0 => __DIR__ . '/..' . '/temporal/sdk/api/v1/Temporal/Roadrunner',
+        ),
+        'Temporal\\Api\\Testservice\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/temporal/sdk/testing/api/testservice/Temporal/Api/Testservice',
         ),
         'Temporal\\Api\\' => 
         array (
@@ -291,6 +306,10 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         array (
             0 => __DIR__ . '/..' . '/symfony/property-access',
         ),
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
+        ),
         'Symfony\\Component\\PasswordHasher\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/password-hasher',
@@ -391,6 +410,15 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         array (
             0 => __DIR__ . '/..' . '/spiral/tokenizer/src',
         ),
+        'Spiral\\RoadRunner\\KeyValue\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spiral/roadrunner-kv/src',
+            1 => __DIR__ . '/..' . '/spiral/roadrunner-kv/generated/Spiral/RoadRunner/KeyValue',
+        ),
+        'Spiral\\RoadRunner\\Http\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spiral/roadrunner-http/src',
+        ),
         'Spiral\\RoadRunner\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/spiral/roadrunner-cli/src',
@@ -426,6 +454,11 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\EventDispatcher\\' => 
         array (
@@ -503,6 +536,10 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         array (
             0 => __DIR__ . '/..' . '/google/common-protos/src',
         ),
+        'GPBMetadata\\Temporal\\Api\\Testservice\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/temporal/sdk/testing/api/testservice/GPBMetadata/Temporal/Api/Testservice',
+        ),
         'GPBMetadata\\Google\\Protobuf\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/protobuf/src/GPBMetadata/Google/Protobuf',
@@ -513,7 +550,8 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         ),
         'GPBMetadata\\' => 
         array (
-            0 => __DIR__ . '/..' . '/temporal/sdk/api/v1/GPBMetadata',
+            0 => __DIR__ . '/..' . '/spiral/roadrunner-kv/generated/GPBMetadata',
+            1 => __DIR__ . '/..' . '/temporal/sdk/api/v1/GPBMetadata',
         ),
         'FOS\\RestBundle\\' => 
         array (

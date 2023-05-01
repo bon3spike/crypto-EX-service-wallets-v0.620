@@ -101,8 +101,13 @@ final class Type
         if ($type instanceof \ReflectionNamedType) {
             $name = $type->getName();
 
+            /** @psalm-suppress UndefinedClass */
+            if (PHP_VERSION_ID >= 80104 && \is_subclass_of($name, \UnitEnum::class)) {
+                return new self($type->getName(), true);
+            }
+
             // Traversable types (i.e. Generator) not allowed
-            if (!$name instanceof \Traversable && $name !== 'array' && $name !== 'iterable') {
+            if (!$name instanceof \Traversable && $name !== 'iterable') {
                 return new self($type->getName(), $type->allowsNull());
             }
         }
@@ -111,7 +116,7 @@ final class Type
     }
 
     /**
-     * @param string|\ReflectionClass|\ReflectionType|Type $type
+     * @param string|\ReflectionClass|\ReflectionType|Type|ReturnType $type
      * @return Type
      */
     public static function create($type): Type

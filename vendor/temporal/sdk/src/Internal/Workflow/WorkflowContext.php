@@ -35,7 +35,6 @@ use Temporal\Internal\Transport\Request\NewTimer;
 use Temporal\Internal\Transport\Request\Panic;
 use Temporal\Internal\Transport\Request\SideEffect;
 use Temporal\Promise;
-use Temporal\Worker\Transport\Command\CommandInterface;
 use Temporal\Worker\Transport\Command\RequestInterface;
 use Temporal\Workflow\ActivityStubInterface;
 use Temporal\Workflow\ChildWorkflowOptions;
@@ -45,6 +44,7 @@ use Temporal\Workflow\ExternalWorkflowStubInterface;
 use Temporal\Workflow\WorkflowContextInterface;
 use Temporal\Workflow\WorkflowExecution;
 use Temporal\Workflow\WorkflowInfo;
+use Temporal\Internal\Transport\Request\UpsertSearchAttributes;
 
 use function React\Promise\reject;
 use function React\Promise\resolve;
@@ -58,12 +58,11 @@ class WorkflowContext implements WorkflowContextInterface
     protected WorkflowInstanceInterface $workflowInstance;
     protected ?ValuesInterface $lastCompletionResult = null;
 
-    protected array $awaits = [];
-    protected array $asyncAwaits = [];
     /**
-     * @var <CompletableResultInterface, CommandInterface>
+     * Contains conditional groups that contains tuple of a condition callable and its promise
+     * @var array<non-empty-string, array<int<0, max>, array{callable, Deferred}>>
      */
-    protected \SplObjectStorage $timers;
+    protected array $awaits = [];
 
     private array $trace = [];
     private bool $continueAsNew = false;
@@ -88,7 +87,6 @@ class WorkflowContext implements WorkflowContextInterface
         $this->workflowInstance = $workflowInstance;
         $this->input = $input;
         $this->lastCompletionResult = $lastCompletionResult;
-        $this->timers = new \SplObjectStorage();
     }
 
     /**
@@ -377,7 +375,7 @@ class WorkflowContext implements WorkflowContextInterface
     {
         $activities = $this->services->activitiesReader->fromClass($class);
 
-        if ($activities[0]->isLocalActivity() && !$options instanceof LocalActivityOptions) {
+        if (isset($activities[0]) && $activities[0]->isLocalActivity() && !$options instanceof LocalActivityOptions) {
             throw new RuntimeException("Local activity can be used only with LocalActivityOptions");
         }
 
@@ -395,10 +393,7 @@ class WorkflowContext implements WorkflowContextInterface
     public function timer($interval): PromiseInterface
     {
         $request = new NewTimer(DateInterval::parse($interval, DateInterval::FORMAT_SECONDS));
-        $result = $this->request($request);
-        $this->timers->attach($result, $request);
-
-        return $result;
+        return $this->request($request);
     }
 
     /**
@@ -421,6 +416,16 @@ class WorkflowContext implements WorkflowContextInterface
     /**
      * {@inheritDoc}
      */
+    public function upsertSearchAttributes(array $searchAttributes): void
+    {
+        $this->services->client->request(
+            new UpsertSearchAttributes($searchAttributes)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function await(...$conditions): PromiseInterface
     {
         $result = [];
@@ -436,11 +441,11 @@ class WorkflowContext implements WorkflowContextInterface
                     return resolve(true);
                 }
                 $result[] = $this->addCondition($conditionGroupId, $condition);
+                continue;
             }
 
-            if ($condition instanceof PromiseInterface)
-            {
-                $result[] = $this->addAsyncCondition($conditionGroupId, $condition);
+            if ($condition instanceof PromiseInterface) {
+                $result[] = $condition;
             }
         }
 
@@ -448,7 +453,24 @@ class WorkflowContext implements WorkflowContextInterface
             return $result[0];
         }
 
-        return Promise::any($result);
+        return Promise::any($result)->then(
+            function ($result) use ($conditionGroupId) {
+                $this->resolveConditionGroup($conditionGroupId);
+                return $result;
+            },
+            function ($reason) use ($conditionGroupId) {
+                $this->rejectConditionGroup($conditionGroupId);
+                // Throw the first reason
+                // It need to avoid memory leak when the related workflow is destroyed
+                if (\is_iterable($reason)) {
+                    foreach ($reason as $exception) {
+                        if ($exception instanceof \Throwable) {
+                            throw $exception;
+                        }
+                    }
+                }
+            },
+        );
     }
 
     /**
@@ -456,12 +478,21 @@ class WorkflowContext implements WorkflowContextInterface
      */
     public function awaitWithTimeout($interval, ...$conditions): PromiseInterface
     {
-        $timer = $this->timer($interval);
+        /** Bypassing {@see timer()} to acquire a timer request ID */
+        $request = new NewTimer(DateInterval::parse($interval, DateInterval::FORMAT_SECONDS));
+        $requestId = $request->getID();
+        $timer = $this->request($request);
+        \assert($timer instanceof CompletableResultInterface);
 
-        $conditions[] = $timer;
-
-        return $this->await(...$conditions)
-            ->then(static fn (): bool => !$timer->isComplete());
+        return $this->await($timer, ...$conditions)
+            ->then(function () use ($timer, $requestId): bool {
+                $isCompleted = $timer->isComplete();
+                if (!$isCompleted) {
+                    // If internal timer was not completed then cancel it
+                    $this->request(new Cancel($requestId));
+                }
+                return !$isCompleted;
+            });
     }
 
     /**
@@ -470,8 +501,7 @@ class WorkflowContext implements WorkflowContextInterface
     public function resolveConditions(): void
     {
         foreach ($this->awaits as $awaitsGroupId => $awaitsGroup) {
-            foreach ($awaitsGroup as $i => $cond) {
-                [$condition, $deferred] = $cond;
+            foreach ($awaitsGroup as $i => [$condition, $deferred]) {
                 if ($condition()) {
                     $deferred->resolve();
                     unset($this->awaits[$awaitsGroupId][$i]);
@@ -482,7 +512,7 @@ class WorkflowContext implements WorkflowContextInterface
     }
 
     /**
-     * @param string $conditionGroupId
+     * @param non-empty-string $conditionGroupId
      * @param callable $condition
      * @return PromiseInterface
      */
@@ -492,15 +522,6 @@ class WorkflowContext implements WorkflowContextInterface
         $this->awaits[$conditionGroupId][] = [$condition, $deferred];
 
         return $deferred->promise();
-    }
-
-    protected function addAsyncCondition(string $conditionGroupId, PromiseInterface $condition): PromiseInterface
-    {
-        $this->asyncAwaits[$conditionGroupId][] = $condition;
-        return $condition->then(function ($result) use ($conditionGroupId) {
-            $this->resolveConditionGroup($conditionGroupId);
-            return $result;
-        });
     }
 
     /**
@@ -515,34 +536,11 @@ class WorkflowContext implements WorkflowContextInterface
 
     public function resolveConditionGroup(string $conditionGroupId): void
     {
-        // First resolve pending promises
-        if (isset($this->awaits[$conditionGroupId])) {
-            foreach ($this->awaits[$conditionGroupId] as $i => $cond) {
-                [$_, $deferred] = $cond;
-                unset($this->awaits[$conditionGroupId][$i]);
-                $deferred->resolve();
-            }
-            unset($this->awaits[$conditionGroupId]);
-        }
+        unset($this->awaits[$conditionGroupId]);
+    }
 
-        // Check pending timers in this group
-        if (!isset($this->asyncAwaits[$conditionGroupId])) {
-            return;
-        }
-
-        // Then cancel any pending timers if exist
-        foreach ($this->asyncAwaits[$conditionGroupId] as $index => $awaitCondition) {
-            if (!$awaitCondition->isComplete()) {
-                /** @var NewTimer $timer */
-                $timer = $this->timers->offsetGet($awaitCondition);
-                if ($timer !== null) {
-                    $request = new Cancel($timer->getID());
-                    $this->request($request);
-                    $this->timers->offsetUnset($awaitCondition);
-                }
-            }
-            unset($this->asyncAwaits[$conditionGroupId][$index]);
-        }
-        unset($this->asyncAwaits[$conditionGroupId]);
+    public function rejectConditionGroup(string $conditionGroupId): void
+    {
+        unset($this->awaits[$conditionGroupId]);
     }
 }

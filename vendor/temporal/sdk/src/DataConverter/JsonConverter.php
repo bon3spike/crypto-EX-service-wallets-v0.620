@@ -83,7 +83,12 @@ class JsonConverter extends Converter
     public function fromPayload(Payload $payload, Type $type)
     {
         try {
-            $data = \json_decode($payload->getData(), false, 512, self::JSON_FLAGS);
+            $data = \json_decode(
+                $payload->getData(),
+                $type->getName() === Type::TYPE_ARRAY,
+                512,
+                self::JSON_FLAGS
+            );
         } catch (\Throwable $e) {
             throw new DataConverterException($e->getMessage(), $e->getCode(), $e);
         }
@@ -137,9 +142,12 @@ class JsonConverter extends Converter
 
         if ((\is_object($data) || \is_array($data)) && $type->isClass()) {
             try {
-                $instance = (new \ReflectionClass($type->getName()))
-                    ->newInstanceWithoutConstructor()
-                ;
+                $reflection = new \ReflectionClass($type->getName());
+                if (PHP_VERSION_ID >= 80104 && $reflection->isEnum()) {
+                    return $reflection->getConstant($data->name);
+                }
+
+                $instance = $reflection->newInstanceWithoutConstructor();
             } catch (\ReflectionException $e) {
                 throw new DataConverterException($e->getMessage(), $e->getCode(), $e);
             }
