@@ -112,6 +112,7 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         ),
         'N' => 
         array (
+            'Nyholm\\Psr7\\' => 12,
             'Nelmio\\CorsBundle\\' => 18,
             'Negotiation\\' => 12,
             'Namshi\\JOSE\\' => 12,
@@ -131,6 +132,10 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         array (
             'JMS\\Serializer\\' => 15,
             'JMS\\SerializerBundle\\' => 21,
+        ),
+        'H' => 
+        array (
+            'Http\\Message\\' => 13,
         ),
         'G' => 
         array (
@@ -457,8 +462,8 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\EventDispatcher\\' => 
         array (
@@ -483,6 +488,10 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         'PHPStan\\PhpDocParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
+        ),
+        'Nyholm\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nyholm/psr7/src',
         ),
         'Nelmio\\CorsBundle\\' => 
         array (
@@ -523,6 +532,10 @@ class ComposerStaticInit76e90e13359bb8ba49a4f022c989fec5
         'JMS\\SerializerBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/jms/serializer-bundle',
+        ),
+        'Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-http/message-factory/src',
         ),
         'Grpc\\' => 
         array (

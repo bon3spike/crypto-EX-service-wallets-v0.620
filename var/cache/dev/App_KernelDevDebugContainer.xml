@@ -258,6 +258,8 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.route_loader"/>
     </service>
+    <service id="nyholm.psr7.psr17_factory" class="Nyholm\Psr7\Factory\Psr17Factory"/>
+    <service id="nyholm.psr7.httplug_factory" class="Nyholm\Psr7\Factory\HttplugFactory"/>
     <service id="App\Notification\Expander\NotificationDtoExpanderInterface" class="App\Notification\Expander\NotificationDtoExpander" autowire="true" autoconfigure="true">
       <argument type="tagged_iterator" tag="app.notification_expander"/>
     </service>
@@ -8465,6 +8467,17 @@
         <argument key="Symfony\Bridge\Twig\Extension\HttpKernelRuntime" type="service_closure" id="twig.runtime.httpkernel"/>
       </argument>
     </service>
+    <service id="Psr\Http\Message\RequestFactoryInterface" alias="nyholm.psr7.psr17_factory"/>
+    <service id="Psr\Http\Message\ResponseFactoryInterface" alias="nyholm.psr7.psr17_factory"/>
+    <service id="Psr\Http\Message\ServerRequestFactoryInterface" alias="nyholm.psr7.psr17_factory"/>
+    <service id="Psr\Http\Message\StreamFactoryInterface" alias="nyholm.psr7.psr17_factory"/>
+    <service id="Psr\Http\Message\UploadedFileFactoryInterface" alias="nyholm.psr7.psr17_factory"/>
+    <service id="Psr\Http\Message\UriFactoryInterface" alias="nyholm.psr7.psr17_factory"/>
+    <service id="Http\Message\MessageFactory" alias="nyholm.psr7.httplug_factory"/>
+    <service id="Http\Message\RequestFactory" alias="nyholm.psr7.httplug_factory"/>
+    <service id="Http\Message\ResponseFactory" alias="nyholm.psr7.httplug_factory"/>
+    <service id="Http\Message\StreamFactory" alias="nyholm.psr7.httplug_factory"/>
+    <service id="Http\Message\UriFactory" alias="nyholm.psr7.httplug_factory"/>
     <service id="App\Application\Command\CommandBusInterface" alias="App\Infrastructure\Bus\CommandBus"/>
     <service id="App\Application\Query\QueryBusInterface" alias="App\Infrastructure\Bus\QueryBus"/>
     <service id="App\Notification\Facade\NotificationFacadeInterface" alias="App\Notification\Facade\NotificationFacade"/>

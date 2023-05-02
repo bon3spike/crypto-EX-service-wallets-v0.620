@@ -1,8 +1,15 @@
-version: '3'
+version: "3.4"
 
+# Development environment override
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    ports:
-      - "5432"
-###< doctrine/doctrine-bundle ###
+  elasticsearch:
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    image: elasticsearch:8.5.3
+    volumes:
+      - /var/lib/elasticsearch/data
+
+
+

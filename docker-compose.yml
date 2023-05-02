@@ -1,21 +1,37 @@
-version: '3'
-
+version: "3.5"
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-15}-alpine
+  temporal:
+    env_file:
+      - .env
+    image: temporalio/auto-setup:1.18.5
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+    ports:
+      - 7233:7233
 
-volumes:
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+  temporal-admin-tools:
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:1.18.5
+    stdin_open: true
+    tty: true
+
+  temporal-web:
+    image: temporalio/web:1.15.0
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+    ports:
+      - 8080:8080
+
+  php-back:
+    build:
+      context: .
+    restart: unless-stopped
+    command: [ "/usr/local/bin/wait-for-temporal.sh", "temporal", "/usr/local/bin/rr", "serve", "-c", "/var/app/.rr.yaml" ]
+    environment:
+      TEMPORAL_CLI_ADDRESS: "temporal:7233"
+      APP_MODE: "backend"
