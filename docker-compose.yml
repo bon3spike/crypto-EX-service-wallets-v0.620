@@ -30,8 +30,6 @@ services:
   php-back:
     build:
       context: .
-    restart: unless-stopped
-    command: [ "/usr/local/bin/wait-for-temporal.sh", "temporal", "/usr/local/bin/rr", "serve", "-c", "/var/app/.rr.yaml" ]
+    command: [ "/usr/local/bin/wait-for-temporal.sh", "temporal", "/usr/local/bin/rr", "serve", "/var/app/.rr.yaml" ]
     environment:
       TEMPORAL_CLI_ADDRESS: "temporal:7233"
-      APP_MODE: "backend"

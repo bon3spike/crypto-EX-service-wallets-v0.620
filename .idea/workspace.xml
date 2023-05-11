@@ -4,26 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5c8343a-042e-4600-9bfa-767d7b322271" name="Changes" comment="Exception + change dir">
-      <change afterPath="$PROJECT_DIR$/.rr.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="f5c8343a-042e-4600-9bfa-767d7b322271" name="Changes" comment="Docker">
+      <change afterPath="$PROJECT_DIR$/docker/dynamicconfig/development.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker/wait-for-temporal.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.override.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.override.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/samples-php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/qr_code_generator/index.html.twig" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.php" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.php.meta" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.php.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.preload.php" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.preload.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.xml" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.xml.meta" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainer.xml.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainerCompiler.log" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/App_KernelDevDebugContainerCompiler.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/var/cache/dev/annotations.php" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/annotations.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/+/G/+f5GSdDu6VnPo7lIrh0Q" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/+/G/+f5GSdDu6VnPo7lIrh0Q" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/+/G/s3thqj3kiT3nTaOoy20A" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/+/G/s3thqj3kiT3nTaOoy20A" afterDir="false" />
@@ -156,10 +143,6 @@
       <change beforePath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/Z/R/6tUM2wINMjyYRq2PAuvA" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/Z/R/6tUM2wINMjyYRq2PAuvA" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/Z/R/xQOhx7ZgGKBlp33Flgvg" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/Z/R/xQOhx7ZgGKBlp33Flgvg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/Z/U/ubAyPQ0ubqpzgsaGimjQ" beforeDir="false" afterPath="$PROJECT_DIR$/var/cache/dev/pools/system/oc-kL9pPOK/Z/U/ubAyPQ0ubqpzgsaGimjQ" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/var/cache/dev/twig/1d/1d82e41133a00a4863339a4a46f750b4.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.json" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vendor/composer/installed.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -333,20 +316,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/john/Desktop/testing_CQRS/samples-php",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/john/Desktop/testing_CQRS/samples-php&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/samples-php" />
@@ -380,7 +363,9 @@
       <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
-      <deployment type="dockerfile" />
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -410,7 +395,8 @@
       <workItem from="1682591413956" duration="5719000" />
       <workItem from="1682667795262" duration="4117000" />
       <workItem from="1682698974948" duration="3359000" />
-      <workItem from="1682965918995" duration="20191000" />
+      <workItem from="1682965918995" duration="24211000" />
+      <workItem from="1683814008970" duration="856000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1682426320146</created>
@@ -482,7 +468,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682969709727</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Docker">
+      <created>1683020684601</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1683020684601</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -507,6 +500,7 @@
     <MESSAGE value="Facade Notification" />
     <MESSAGE value="Facade Notification Ready" />
     <MESSAGE value="Exception + change dir" />
-    <option name="LAST_COMMIT_MESSAGE" value="Exception + change dir" />
+    <MESSAGE value="Docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="Docker" />
   </component>
 </project>
